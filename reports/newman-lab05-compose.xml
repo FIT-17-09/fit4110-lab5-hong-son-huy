@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="FIT4110 Lab05 Compose" tests="5" time="0.164">
+  <testsuite name="API health" id="4b81911b-7c72-4e4c-96df-58e26eb3acf3" timestamp="2026-06-10T01:37:25.366Z" tests="2" failures="0" errors="0" time="0.058">
+    <testcase name="API health returns 200" time="0.058" classname="ApiHealth"/>
+    <testcase name="API service is iot-ingestion" time="0.058" classname="ApiHealth"/>
+  </testsuite>
+  <testsuite name="AI health" id="947b30bf-9005-4fbc-b1bc-b38e20294b00" timestamp="2026-06-10T01:37:25.366Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="AI health returns 200" time="0.012" classname="AiHealth"/>
+    <testcase name="AI service is ai-service" time="0.012" classname="AiHealth"/>
+  </testsuite>
+  <testsuite name="Create reading" id="b7ead905-da1c-4bea-a0dd-13c792114091" timestamp="2026-06-10T01:37:25.366Z" tests="2" failures="0" errors="0" time="0.043">
+    <testcase name="Create reading returns 201" time="0.043" classname="CreateReading"/>
+    <testcase name="Reading accepted" time="0.043" classname="CreateReading"/>
+  </testsuite>
+  <testsuite name="Latest readings" id="a2ead111-6076-441d-97c7-07261718ae27" timestamp="2026-06-10T01:37:25.366Z" tests="2" failures="0" errors="0" time="0.024">
+    <testcase name="Latest readings returns 200" time="0.024" classname="LatestReadings"/>
+    <testcase name="Latest includes at least one item" time="0.024" classname="LatestReadings"/>
+  </testsuite>
+  <testsuite name="Get created reading" id="73f9af3e-d68e-48be-b979-5ddb35865410" timestamp="2026-06-10T01:37:25.366Z" tests="2" failures="0" errors="0" time="0.027">
+    <testcase name="Get reading returns 200" time="0.027" classname="GetCreatedReading"/>
+    <testcase name="Reading id matches" time="0.027" classname="GetCreatedReading"/>
+  </testsuite>
+</testsuites>

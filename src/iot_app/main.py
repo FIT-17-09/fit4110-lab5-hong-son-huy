@@ -3,24 +3,25 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Dict, List, Optional
 
+import psycopg
+import requests
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from psycopg.rows import dict_row
 from pydantic import BaseModel, Field
 
-# Đọc biến môi trường với giá trị mặc định
 SERVICE_NAME = os.getenv("SERVICE_NAME", "iot-ingestion")
 SERVICE_VERSION = os.getenv("SERVICE_VERSION", "0.5.0")
 AUTH_TOKEN = os.getenv("AUTH_TOKEN", "local-dev-token")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://lab05:lab05pass@db:5432/iotdb")
+AI_SERVICE_URL = os.getenv("AI_SERVICE_URL", "http://ai-service:9000")
 
 
 app = FastAPI(
     title="FIT4110 Lab 05 - IoT Ingestion Service",
     version=SERVICE_VERSION,
-    description=(
-        "IoT Ingestion API chạy trong ngữ cảnh Docker Compose cho Lab 05. "
-        "Luồng logic được kế thừa từ Lab 04 và tiếp tục được dùng để kiểm thử end‑to‑end."
-    ),
+    description="IoT Ingestion API running in the Docker Compose stack for Lab 05.",
 )
 
 
@@ -59,21 +60,11 @@ class SensorReadingCreate(BaseModel):
         ...,
         ge=-40,
         le=80,
-        description="Boundary range used in Lab 03 và Lab 04: -40 đến 80.",
+        description="Boundary range used in Lab 03 and Lab 04: -40 to 80.",
         examples=[31.5],
     )
     unit: Optional[SensorUnit] = Field(default=None, examples=["celsius"])
     timestamp: str = Field(..., examples=["2026-05-13T08:30:00+07:00"])
-
-
-class SensorReading(BaseModel):
-    reading_id: str
-    device_id: str
-    metric: SensorMetric
-    value: float
-    unit: Optional[SensorUnit] = None
-    timestamp: str
-    created_at: str
 
 
 class SensorReadingCreated(BaseModel):
@@ -84,7 +75,25 @@ class SensorReadingCreated(BaseModel):
     created_at: str
 
 
-READINGS: List[Dict] = []
+CREATE_READINGS_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS readings (
+    reading_id TEXT PRIMARY KEY,
+    device_id TEXT NOT NULL,
+    metric TEXT NOT NULL,
+    value DOUBLE PRECISION NOT NULL,
+    unit TEXT,
+    timestamp TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    ai_objects TEXT NOT NULL DEFAULT '',
+    ai_confidence TEXT NOT NULL DEFAULT ''
+)
+"""
+
+
+@app.on_event("startup")
+def startup() -> None:
+    with psycopg.connect(DATABASE_URL) as conn:
+        conn.execute(CREATE_READINGS_TABLE_SQL)
 
 
 def build_problem(
@@ -185,7 +194,38 @@ def now_iso() -> str:
 
 def next_reading_id() -> str:
     today = datetime.now(timezone.utc).strftime("%Y%m%d")
-    return f"R-{today}-{len(READINGS) + 1:04d}"
+    with psycopg.connect(DATABASE_URL) as conn:
+        count = conn.execute("SELECT COUNT(*) FROM readings").fetchone()[0]
+    return f"R-{today}-{count + 1:04d}"
+
+
+def call_ai_service() -> Dict[str, List]:
+    try:
+        response = requests.post(f"{AI_SERVICE_URL}/predict", timeout=3)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=build_problem(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                title="AI service unavailable",
+                detail=str(exc),
+                problem_type="https://smart-campus.local/problems/ai-unavailable",
+            ),
+        ) from exc
+
+
+def row_to_reading(row: Dict) -> Dict:
+    return {
+        "reading_id": row["reading_id"],
+        "device_id": row["device_id"],
+        "metric": row["metric"],
+        "value": row["value"],
+        "unit": row["unit"],
+        "timestamp": row["timestamp"],
+        "created_at": row["created_at"],
+    }
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -205,27 +245,38 @@ def health() -> HealthResponse:
     responses={
         401: {"model": ProblemDetails},
         422: {"model": ProblemDetails},
-        429: {"model": ProblemDetails},
+        503: {"model": ProblemDetails},
     },
 )
 def create_reading(payload: SensorReadingCreate, response: Response) -> SensorReadingCreated:
-    # Ví dụ logic cảnh báo: nếu nhiệt độ >= 70 thì thêm header cảnh báo
     if payload.metric == SensorMetric.temperature and payload.value >= 70:
         response.headers["X-Warning"] = "high-temperature"
 
+    prediction = call_ai_service()
     reading_id = next_reading_id()
     created_at = now_iso()
 
-    item = {
-        "reading_id": reading_id,
-        "device_id": payload.device_id,
-        "metric": payload.metric.value,
-        "value": payload.value,
-        "unit": payload.unit.value if payload.unit else None,
-        "timestamp": payload.timestamp,
-        "created_at": created_at,
-    }
-    READINGS.append(item)
+    with psycopg.connect(DATABASE_URL) as conn:
+        conn.execute(
+            """
+            INSERT INTO readings (
+                reading_id, device_id, metric, value, unit, timestamp,
+                created_at, ai_objects, ai_confidence
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (
+                reading_id,
+                payload.device_id,
+                payload.metric.value,
+                payload.value,
+                payload.unit.value if payload.unit else None,
+                payload.timestamp,
+                created_at,
+                ",".join(prediction.get("objects", [])),
+                ",".join(str(value) for value in prediction.get("confidence", [])),
+            ),
+        )
 
     return SensorReadingCreated(
         reading_id=reading_id,
@@ -241,19 +292,39 @@ def latest_readings(
     device_id: Optional[str] = Query(default=None),
     limit: int = Query(default=10, ge=1, le=100),
 ) -> Dict[str, List[Dict]]:
-    items = READINGS
+    query = """
+        SELECT reading_id, device_id, metric, value, unit, timestamp, created_at
+        FROM readings
+    """
+    params = []
 
     if device_id:
-        items = [item for item in items if item["device_id"] == device_id]
+        query += " WHERE device_id = %s"
+        params.append(device_id)
 
-    return {"items": items[-limit:]}
+    query += " ORDER BY created_at DESC LIMIT %s"
+    params.append(limit)
+
+    with psycopg.connect(DATABASE_URL, row_factory=dict_row) as conn:
+        rows = conn.execute(query, params).fetchall()
+
+    return {"items": [row_to_reading(row) for row in reversed(rows)]}
 
 
 @app.get("/readings/{reading_id}", dependencies=[Depends(verify_bearer_token)])
 def get_reading(reading_id: str) -> Dict:
-    for item in READINGS:
-        if item["reading_id"] == reading_id:
-            return item
+    with psycopg.connect(DATABASE_URL, row_factory=dict_row) as conn:
+        row = conn.execute(
+            """
+            SELECT reading_id, device_id, metric, value, unit, timestamp, created_at
+            FROM readings
+            WHERE reading_id = %s
+            """,
+            (reading_id,),
+        ).fetchone()
+
+    if row:
+        return row_to_reading(row)
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,

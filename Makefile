@@ -18,13 +18,13 @@ run:
 
 # Compose commands
 compose-up:
-	docker compose up -d --build
+	docker-compose up -d --build
 
 compose-down:
-	docker compose down
+	docker-compose down
 
 logs:
-	docker compose logs -f
+	docker-compose logs -f
 
 # Run Newman tests on compose stack
 test-compose:

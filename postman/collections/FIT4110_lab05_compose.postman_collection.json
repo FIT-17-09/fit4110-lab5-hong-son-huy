@@ -1,0 +1,132 @@
+{
+  "info": {
+    "name": "FIT4110 Lab05 Compose",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "API health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('API health returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('API service is iot-ingestion', function () { pm.expect(pm.response.json().service).to.eql('iot-ingestion'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI health",
+      "request": {
+        "method": "GET",
+        "url": "{{aiBaseUrl}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('AI health returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('AI service is ai-service', function () { pm.expect(pm.response.json().service).to.eql('ai-service'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create reading",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"device_id\": \"ESP32-LAB-A01\",\n  \"metric\": \"temperature\",\n  \"value\": 31.5,\n  \"unit\": \"celsius\",\n  \"timestamp\": \"2026-05-13T08:30:00+07:00\"\n}"
+        },
+        "url": "{{baseUrl}}/readings"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Create reading returns 201', function () { pm.response.to.have.status(201); });",
+              "const body = pm.response.json();",
+              "pm.test('Reading accepted', function () { pm.expect(body.accepted).to.eql(true); });",
+              "pm.collectionVariables.set('createdReadingId', body.reading_id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Latest readings",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/readings/latest?device_id=ESP32-LAB-A01&limit=5"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Latest readings returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Latest includes at least one item', function () { pm.expect(pm.response.json().items.length).to.be.above(0); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get created reading",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/readings/{{createdReadingId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Get reading returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Reading id matches', function () { pm.expect(pm.response.json().reading_id).to.eql(pm.collectionVariables.get('createdReadingId')); });"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "createdReadingId",
+      "value": ""
+    }
+  ]
+}
