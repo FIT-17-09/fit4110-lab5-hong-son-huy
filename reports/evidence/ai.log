@@ -1,0 +1,47 @@
+fit4110-ai-lab05  | WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+fit4110-ai-lab05  | 
+fit4110-ai-lab05  | [notice] A new release of pip is available: 24.0 -> 26.1.2
+fit4110-ai-lab05  | [notice] To update, run: pip install --upgrade pip
+fit4110-ai-lab05  | INFO:     Started server process [25]
+fit4110-ai-lab05  | INFO:     Waiting for application startup.
+fit4110-ai-lab05  | INFO:     Application startup complete.
+fit4110-ai-lab05  | INFO:     Uvicorn running on http://0.0.0.0:9000 (Press CTRL+C to quit)
+fit4110-ai-lab05  | INFO:     127.0.0.1:36096 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:59094 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:58984 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:34820 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:45672 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:52914 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:37472 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:39802 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:47276 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:41034 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:56364 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:34130 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:52584 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:41680 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:47134 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:44790 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:48902 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     172.21.0.1:48570 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:60232 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:56234 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:45708 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:33788 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:57452 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:36452 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:56646 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:57972 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:40100 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:54284 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:47404 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:34496 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:45894 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:60956 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:53466 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:60610 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:55634 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:42932 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:53322 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:33350 - "GET /health HTTP/1.1" 200 OK
+fit4110-ai-lab05  | INFO:     127.0.0.1:52502 - "GET /health HTTP/1.1" 200 OK

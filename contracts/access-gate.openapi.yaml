@@ -1,0 +1,595 @@
+openapi: 3.1.0
+
+info:
+  title: Smart Campus API Contract
+  version: 1.0.0
+  description: >
+    API contract cho Access Gate và Core Business
+    trong Smart Campus Operations Platform.
+  contact:
+    name: Nhom 5
+    email: nhom5@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:4010
+    description: Prism Mock Server
+  
+
+tags:
+  - name: access
+    description: Access control operations
+  - name: policy
+    description: Access policy management
+  - name: health
+    description: Service health check
+  - name: access-logs
+    description: Access log retrieval
+  - name: gates
+    description: Gate status operations
+  - name: cards
+    description: Card information operations
+
+security:
+  - bearerAuth: []
+
+paths:
+
+  /access/check:
+    post:
+      operationId: checkAccess
+      summary: Check access permission
+      description: >
+        Access Gate gửi cardId và gateId
+        để Core Business quyết định mở cổng.
+      tags:
+        - access
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessCheckRequest'
+            example:
+              cardId: RFID-001
+              gateId: GATE-01
+
+      responses:
+        '200':
+          description: Access decision result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDecision'
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /policies/access/{policyId}:
+    get:
+      operationId: getPolicy
+      summary: Get access policy
+      description: >
+        Lấy policy truy cập theo policyId.
+      tags:
+        - policy
+
+      parameters:
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Policy found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPolicy'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /decisions/{decisionId}:
+    get:
+      operationId: getDecision
+      summary: Get access decision
+      description: >
+        Trả về lịch sử quyết định allow hoặc deny.
+      tags:
+        - access
+
+      parameters:
+        - name: decisionId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Decision history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDecision'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /health:
+    get:
+      operationId: getHealth
+      summary: Health check
+      description: >
+        Kiểm tra trạng thái hoạt động của service.
+      security: []
+      tags:
+        - health
+
+      responses:
+        '200':
+          description: Service running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          description: Service unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /access/logs/recent:
+    get:
+      operationId: getRecentAccessLogs
+      summary: Get recent access logs
+      description: >
+        Core Business lấy danh sách log quẹt thẻ gần đây
+        từ Access Gate để audit.
+      tags:
+        - access-logs
+
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+
+      responses:
+        '200':
+          description: Recent access logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessLog'
+
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /access/logs/{logId}:
+    get:
+      operationId: getAccessLogById
+      summary: Get access log detail
+      description: >
+        Lấy chi tiết log quẹt thẻ theo logId.
+      tags:
+        - access-logs
+
+      parameters:
+        - name: logId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Access log detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessLog'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gates/{gateId}/status:
+    get:
+      operationId: getGateStatus
+      summary: Get gate status
+      description: >
+        Truy vấn trạng thái hiện tại của gate.
+      tags:
+        - gates
+
+      parameters:
+        - name: gateId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Gate status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GateStatus'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /cards/{cardId}:
+    get:
+      operationId: getCardInformation
+      summary: Get card information
+      description: >
+        Truy vấn thông tin card từ Access Gate.
+      tags:
+        - cards
+
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Card information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardInfo'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    AccessCheckRequest:
+      type: object
+      required:
+        - cardId
+        - gateId
+
+      properties:
+        cardId:
+          type: string
+          example: RFID-001
+
+        gateId:
+          type: string
+          example: GATE-01
+
+        timestamp:
+          type: string
+          format: date-time
+
+    AccessDecision:
+      oneOf:
+        - $ref: '#/components/schemas/AccessGranted'
+        - $ref: '#/components/schemas/AccessDenied'
+
+      discriminator:
+        propertyName: decisionType
+
+        mapping:
+          ALLOW: '#/components/schemas/AccessGranted'
+          DENY: '#/components/schemas/AccessDenied'
+
+    AccessGranted:
+      type: object
+
+      required:
+        - decisionType
+        - decisionId
+        - allow
+
+      properties:
+        decisionType:
+          type: string
+          const: ALLOW
+
+        decisionId:
+          type: string
+          format: uuid
+
+        allow:
+          type: boolean
+          example: true
+
+        policyId:
+          type: string
+
+        expiresAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+          example: null
+
+    AccessDenied:
+      type: object
+
+      required:
+        - decisionType
+        - decisionId
+        - reasonCode
+
+      properties:
+        decisionType:
+          type: string
+          const: DENY
+
+        decisionId:
+          type: string
+          format: uuid
+
+        allow:
+          type: boolean
+          example: false
+
+        reasonCode:
+          type: string
+          example: CARD_BLOCKED
+
+    AccessPolicy:
+      type: object
+
+      required:
+        - policyId
+        - role
+
+      properties:
+        policyId:
+          type: string
+          example: POLICY-01
+
+        role:
+          type: string
+          example: Student
+
+        accessLevel:
+          type: string
+          example: NORMAL
+
+    AccessLog:
+      type: object
+
+      required:
+        - logId
+        - cardId
+        - gateId
+        - direction
+        - status
+        - timestamp
+
+      properties:
+        logId:
+          type: string
+          format: uuid
+
+        cardId:
+          type: string
+          example: RFID-001
+
+        gateId:
+          type: string
+          example: GATE-01
+
+        direction:
+          type: string
+          enum:
+            - IN
+            - OUT
+
+        status:
+          type: string
+          enum:
+            - ALLOW
+            - DENY
+
+        timestamp:
+          type: string
+          format: date-time
+
+        operatorNote:
+          type:
+            - string
+            - "null"
+
+    GateStatus:
+      type: object
+
+      required:
+        - gateId
+        - status
+
+      properties:
+        gateId:
+          type: string
+          example: GATE-01
+
+        status:
+          type: string
+          enum:
+            - OPEN
+            - CLOSED
+            - MAINTENANCE
+
+        lastUpdated:
+          type: string
+          format: date-time
+
+    CardInfo:
+      type: object
+
+      required:
+        - cardId
+        - ownerName
+        - cardStatus
+
+      properties:
+        cardId:
+          type: string
+          example: RFID-001
+
+        ownerName:
+          type: string
+          example: Nguyen Van A
+
+        cardStatus:
+          type: string
+          enum:
+            - ACTIVE
+            - BLOCKED
+            - EXPIRED
+
+        expiresAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+
+    HealthStatus:
+      type: object
+
+      properties:
+        status:
+          type: string
+          example: OK
+
+        timestamp:
+          type: string
+          format: date-time
+
+    Problem:
+      type: object
+
+      required:
+        - type
+        - title
+        - status
+
+      properties:
+        type:
+          type: string
+          format: uri
+          example: https://example.com/problems/general
+
+        title:
+          type: string
+
+        status:
+          type: integer
+
+        detail:
+          type:
+            - string
+            - "null"
+
+        instance:
+          type:
+            - string
+            - "null"
+
+  responses:
+
+    BadRequest:
+      description: Invalid payload
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    UnprocessableEntity:
+      description: Invalid business rule
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'

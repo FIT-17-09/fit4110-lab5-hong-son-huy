@@ -27,8 +27,8 @@ ENV PATH="/opt/venv/bin:$PATH"
 ENV APP_HOST=0.0.0.0
 ENV APP_PORT=8000
 ENV AUTH_TOKEN=local-dev-token
-ENV SERVICE_NAME=iot-ingestion
-ENV SERVICE_VERSION=0.5.0
+ENV SERVICE_NAME=access-gate
+ENV SERVICE_VERSION=0.5.0-team-gate
 
 WORKDIR /app
 
@@ -50,5 +50,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()" || exit 1
 
-# Chạy API bằng uvicorn
-CMD ["sh", "-c", "uvicorn iot_app.main:app --app-dir src --host ${APP_HOST} --port ${APP_PORT}"]
+# Chạy API bằng uvicorn (module app trong `src/access_gate_service`)
+CMD ["sh", "-c", "uvicorn access_gate_service.main:app --app-dir src --host ${APP_HOST} --port ${APP_PORT}"]

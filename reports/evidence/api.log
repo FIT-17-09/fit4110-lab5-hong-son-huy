@@ -1,0 +1,29 @@
+fit4110-api-lab05  | INFO:     Started server process [7]
+fit4110-api-lab05  | INFO:     Waiting for application startup.
+fit4110-api-lab05  | INFO:     Application startup complete.
+fit4110-api-lab05  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+fit4110-api-lab05  | INFO:     127.0.0.1:35174 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     172.22.0.1:55526 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:58216 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:42012 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:35540 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:58542 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:45486 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:37334 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:37766 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:52400 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:49160 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:35580 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:41868 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:34334 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:57132 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:34568 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:42390 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:42148 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:41266 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:35152 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     172.22.0.1:47284 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:51346 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:39632 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     127.0.0.1:58546 - "GET /health HTTP/1.1" 200 OK
+fit4110-api-lab05  | INFO:     172.22.0.1:57338 - "GET /health HTTP/1.1" 200 OK

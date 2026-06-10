@@ -77,10 +77,10 @@ FIT4110_lab05_docker_compose_readiness/
 │   └── ai_service/
 │       └── main.py
 ├── contracts/
-│   └── iot-ingestion.openapi.yaml
+│   └── access-gate.openapi.yaml
 ├── postman/
 │   └── environments/
-│       └── FIT4110_lab05_local.postman_environment.json
+│       └── _local.postman_environment.json
 ├── checklists/
 │   └── readiness-checklist.md
 └── reports/
@@ -160,6 +160,11 @@ Kiểm tra readiness của từng service:
 
 Sau khi stack đã sẵn sàng, chạy lại Postman collection giống Lab 04 (sửa `baseUrl` thành `http://localhost:8000`).
 
+Sau khi test xong, reports sẽ xuất ra:
+
+- `reports/newman-lab05-compose.html`
+- `reports/newman-lab05-compose.xml`
+
 Dừng toàn bộ stack:
 
 ```bash
@@ -178,6 +183,8 @@ Phần này ghi lại checklist readiness cần kiểm tra trước khi tuyên b
 - Các biến môi trường (.env) được đặt đúng, không dùng secret thật.
 - `team-internal` network hoạt động; service có thể gọi nội bộ qua tên container.
 - Version/tag của từng image được cập nhật đúng quy ước (vd: `v0.1.0-team-iot`).
+- Bằng chứng `reports/` và `evidence/` đã được lưu, gồm reports Newman và health/log output.
+- Image đã được push tới registry, ví dụ `ghcr.io/tkhong2/fit4110-lab5-hong-son-huy:v0.1.0-teamname`.
 
 ---
 

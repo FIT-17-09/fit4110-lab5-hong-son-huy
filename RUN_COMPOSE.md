@@ -67,6 +67,12 @@ curl -X POST http://localhost:9000/predict
 ## 4. Chạy Newman test trên stack Compose (tuỳ chọn)
 
 ```bash
+make test-compose
+```
+
+Hoặc nếu muốn chạy bằng npm:
+
+```bash
 npm run test:compose
 ```
 

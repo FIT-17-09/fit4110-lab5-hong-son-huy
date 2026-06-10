@@ -1,0 +1,431 @@
+{
+  "info": {
+    "name": "FIT4110 Lab05 - Smart Campus Access Gate API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('status field present', () => {",
+              "  pm.expect(pm.response.json()).to.have.property('status');",
+              "});",
+              "pm.test('status is OK', () => {",
+              "  pm.expect(pm.response.json().status).to.eql('ok');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "02 - Check Access (ALLOW)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('decisionId returned', () => {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property('decisionId');",
+              "  pm.environment.set('decisionId', json.decisionId);",
+              "});",
+              "pm.test('allow is true', () => {",
+              "  pm.expect(pm.response.json().allow).to.be.true;",
+              "});",
+              "pm.test('decisionType is ALLOW', () => {",
+              "  pm.expect(pm.response.json().decisionType).to.eql('ALLOW');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cardId\": \"RFID-001\",\n  \"gateId\": \"GATE-01\",\n  \"timestamp\": \"2026-06-10T08:30:00+07:00\"\n}"
+        },
+        "url": "{{baseUrl}}/access/check"
+      }
+    },
+    {
+      "name": "03 - Check Access (DENY - blocked card)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('decisionType is DENY', () => {",
+              "  pm.expect(pm.response.json().decisionType).to.eql('DENY');",
+              "});",
+              "pm.test('allow is false', () => {",
+              "  pm.expect(pm.response.json().allow).to.be.false;",
+              "});",
+              "pm.test('reasonCode present', () => {",
+              "  pm.expect(pm.response.json()).to.have.property('reasonCode');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cardId\": \"RFID-BLOCKED\",\n  \"gateId\": \"GATE-01\",\n  \"timestamp\": \"2026-06-10T08:35:00+07:00\"\n}"
+        },
+        "url": "{{baseUrl}}/access/check"
+      }
+    },
+    {
+      "name": "04 - Check Access (401 No Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 401', () => pm.response.to.have.status(401));",
+              "pm.test('problem+json content-type', () => {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('problem+json');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cardId\": \"RFID-001\",\n  \"gateId\": \"GATE-01\"\n}"
+        },
+        "url": "{{baseUrl}}/access/check"
+      }
+    },
+    {
+      "name": "05 - Check Access (422 Missing cardId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 422', () => pm.response.to.have.status(422));",
+              "pm.test('problem+json content-type', () => {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('problem+json');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"gateId\": \"GATE-01\"\n}"
+        },
+        "url": "{{baseUrl}}/access/check"
+      }
+    },
+    {
+      "name": "06 - Get Decision by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 or 404', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "  pm.test('decisionId present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('decisionId');",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/decisions/{{decisionId}}"
+      }
+    },
+    {
+      "name": "07 - Get Decision (404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));",
+              "pm.test('problem+json content-type', () => {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('problem+json');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/decisions/non-existent-id-99999"
+      }
+    },
+    {
+      "name": "08 - Get Policy by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 or 404', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "  pm.test('policyId present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('policyId');",
+              "  });",
+              "  pm.test('role present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('role');",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/policies/access/POLICY-01"
+      }
+    },
+    {
+      "name": "09 - Get Policy (404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));",
+              "pm.test('problem+json content-type', () => {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('problem+json');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/policies/access/POLICY-NONEXISTENT"
+      }
+    },
+    {
+      "name": "10 - Get Recent Access Logs",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('response is array', () => {",
+              "  pm.expect(pm.response.json()).to.be.an('array');",
+              "});",
+              "if (pm.response.json().length > 0) {",
+              "  pm.test('log has required fields', () => {",
+              "    const log = pm.response.json()[0];",
+              "    pm.expect(log).to.have.property('logId');",
+              "    pm.expect(log).to.have.property('cardId');",
+              "    pm.expect(log).to.have.property('gateId');",
+              "    pm.expect(log).to.have.property('status');",
+              "    pm.environment.set('logId', log.logId);",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/access/logs/recent?limit=10"
+      }
+    },
+    {
+      "name": "11 - Get Access Log by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 or 404', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "  pm.test('logId present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('logId');",
+              "  });",
+              "  pm.test('direction is IN or OUT', () => {",
+              "    pm.expect(['IN','OUT']).to.include(pm.response.json().direction);",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/access/logs/{{logId}}"
+      }
+    },
+    {
+      "name": "12 - Get Gate Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 or 404', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "  pm.test('gateId present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('gateId');",
+              "  });",
+              "  pm.test('status is valid', () => {",
+              "    pm.expect(['OPEN','CLOSED','MAINTENANCE']).to.include(pm.response.json().status);",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/gates/GATE-01/status"
+      }
+    },
+    {
+      "name": "13 - Get Gate Status (404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));",
+              "pm.test('problem+json content-type', () => {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('problem+json');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/gates/GATE-NONEXISTENT/status"
+      }
+    },
+    {
+      "name": "14 - Get Card Information",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 or 404', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "  pm.test('cardId present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('cardId');",
+              "  });",
+              "  pm.test('cardStatus is valid', () => {",
+              "    pm.expect(['ACTIVE','BLOCKED','EXPIRED']).to.include(pm.response.json().cardStatus);",
+              "  });",
+              "  pm.test('ownerName present', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('ownerName');",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/cards/RFID-001"
+      }
+    },
+    {
+      "name": "15 - Get Card (404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 404', () => pm.response.to.have.status(404));",
+              "pm.test('problem+json content-type', () => {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('problem+json');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": "{{baseUrl}}/cards/RFID-NONEXISTENT"
+      }
+    }
+  ]
+}
