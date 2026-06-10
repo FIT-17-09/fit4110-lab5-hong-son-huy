@@ -9,14 +9,12 @@ This service exposes two endpoints:
 You can replace this file with your actual inference code (e.g. YOLOv8 model).
 """
 
-import os
-from typing import List
-
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import List
 
 SERVICE_NAME = "ai-service"
-SERVICE_VERSION = os.getenv("SERVICE_VERSION", "0.5.0")
+SERVICE_VERSION = "0.5.0"
 
 app = FastAPI(
     title="FIT4110 Lab 05 - AI Service",
