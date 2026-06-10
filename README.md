@@ -71,8 +71,7 @@ FIT4110_lab05_docker_compose_readiness/
 ├── Makefile
 ├── requirements.txt
 ├── src/
-│   ├── iot_app/
-│   │   ├── __init__.py
+│   ├── access_gate_service/
 │   │   └── main.py
 │   └── ai_service/
 │       └── main.py
@@ -84,9 +83,15 @@ FIT4110_lab05_docker_compose_readiness/
 ├── checklists/
 │   └── readiness-checklist.md
 └── reports/
+    ├── evidence/
+    │   ├── ai.log
+    │   ├── api.log
+    │   └── health.json
+    └── images/
+        └── health.png
 ```
 
-Thư mục `src/iot_app` chứa API FastAPI giống Lab 04. Thư mục `src/ai_service` chứa service AI mẫu (giả lập), cung cấp một endpoint `/predict` trả về kết quả dummy. Nhóm có thể thay bằng mô hình thực tế (YOLOv8, MediaPipe…).
+Thư mục `src/access_gate_service` chứa API FastAPI. Thư mục `src/ai_service` chứa service AI mẫu (giả lập), cung cấp một endpoint `/predict` trả về kết quả dummy. Nhóm có thể thay bằng mô hình thực tế (YOLOv8, MediaPipe…).
 
 ---
 
@@ -125,7 +130,7 @@ Các bước giống Lab 04:
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn iot_app.main:app --app-dir src --host 0.0.0.0 --port 8000
+uvicorn access_gate_service.main:app --app-dir src --host 0.0.0.0 --port 8000
 ```
 
 Kiểm tra health:
@@ -183,7 +188,7 @@ Phần này ghi lại checklist readiness cần kiểm tra trước khi tuyên b
 - Các biến môi trường (.env) được đặt đúng, không dùng secret thật.
 - `team-internal` network hoạt động; service có thể gọi nội bộ qua tên container.
 - Version/tag của từng image được cập nhật đúng quy ước (vd: `v0.1.0-team-iot`).
-- Bằng chứng `reports/` và `evidence/` đã được lưu, gồm reports Newman và health/log output.
+- Bằng chứng `reports/` (bao gồm `reports/evidence/` và `reports/images/`) đã được lưu, gồm reports Newman và health/log output.
 - Image đã được push tới registry, ví dụ `ghcr.io/tkhong2/fit4110-lab5-hong-son-huy:v0.1.0-teamname`.
 
 ---
@@ -240,8 +245,8 @@ docker-compose.yml
 .dockerignore
 .env.example
 RUN_COMPOSE.md
-contracts/<team>.openapi.yaml
-postman/environments/<team>_local.postman_environment.json
+contracts/access-gate.openapi.yaml
+postman/environments/_local.postman_environment.json
 reports/newman-lab05-compose.xml
 reports/newman-lab05-compose.html
 ảnh chụp /health hoặc log container

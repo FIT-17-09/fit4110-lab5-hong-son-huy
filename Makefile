@@ -45,7 +45,7 @@ health:
 test-compose:
 	@mkdir -p reports
 	npx newman run postman/collections/FIT4110_lab05_local.postman_collection.json \
-		--environment postman/environments/FIT4110_lab05_local.postman_environment.json \
+		--environment postman/environments/_local.postman_environment.json \
 		--reporters cli,htmlextra,junit \
 		--reporter-htmlextra-export reports/newman-lab05-compose.html \
 		--reporter-junit-export reports/newman-lab05-compose.xml \
@@ -61,7 +61,7 @@ run-local:
 	python -m venv .venv && \
 	source .venv/bin/activate && \
 	pip install -r requirements.txt && \
-	uvicorn iot_app.main:app --app-dir src --host 0.0.0.0 --port 8000
+	uvicorn access_gate_service.main:app --app-dir src --host 0.0.0.0 --port 8000
 
 ## Xem trạng thái container
 ps:

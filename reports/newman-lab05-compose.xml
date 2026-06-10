@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="FIT4110 Lab05 - Smart Campus Access Gate API" tests="15" time="0.131">
-  <testsuite name="01 - Health Check" id="9910e380-f4c7-4cdc-bb98-a29ce27f46ed" timestamp="2026-06-10T02:48:07.885Z" tests="3" failures="0" errors="0" time="0.050">
-    <testcase name="Status 200" time="0.050" classname="01HealthCheck"/>
-    <testcase name="status field present" time="0.050" classname="01HealthCheck"/>
-    <testcase name="status is OK" time="0.050" classname="01HealthCheck"/>
+<testsuites name="FIT4110 Lab05 - Smart Campus Access Gate API" tests="15" time="0.122">
+  <testsuite name="01 - Health Check" id="524b1d71-0a63-478b-8657-382c7d545b30" timestamp="2026-06-10T03:35:18.926Z" tests="3" failures="0" errors="0" time="0.034">
+    <testcase name="Status 200" time="0.034" classname="01HealthCheck"/>
+    <testcase name="status field present" time="0.034" classname="01HealthCheck"/>
+    <testcase name="status is OK" time="0.034" classname="01HealthCheck"/>
   </testsuite>
-  <testsuite name="02 - Check Access (ALLOW)" id="d2437283-f431-4d60-b469-7446cfaf09ab" timestamp="2026-06-10T02:48:07.885Z" tests="4" failures="0" errors="0" time="0.007">
-    <testcase name="Status 200" time="0.007" classname="02CheckAccessAllow"/>
-    <testcase name="decisionId returned" time="0.007" classname="02CheckAccessAllow"/>
-    <testcase name="allow is true" time="0.007" classname="02CheckAccessAllow"/>
-    <testcase name="decisionType is ALLOW" time="0.007" classname="02CheckAccessAllow"/>
+  <testsuite name="02 - Check Access (ALLOW)" id="c5fc7330-79ad-48e1-b787-b5cc9f282c76" timestamp="2026-06-10T03:35:18.926Z" tests="4" failures="0" errors="0" time="0.010">
+    <testcase name="Status 200" time="0.010" classname="02CheckAccessAllow"/>
+    <testcase name="decisionId returned" time="0.010" classname="02CheckAccessAllow"/>
+    <testcase name="allow is true" time="0.010" classname="02CheckAccessAllow"/>
+    <testcase name="decisionType is ALLOW" time="0.010" classname="02CheckAccessAllow"/>
   </testsuite>
-  <testsuite name="03 - Check Access (DENY - blocked card)" id="1e8ccafe-f2f2-4040-bdf5-23c4775830c0" timestamp="2026-06-10T02:48:07.885Z" tests="4" failures="0" errors="0" time="0.007">
-    <testcase name="Status 200" time="0.007" classname="03CheckAccessDenyBlockedCard"/>
-    <testcase name="decisionType is DENY" time="0.007" classname="03CheckAccessDenyBlockedCard"/>
-    <testcase name="allow is false" time="0.007" classname="03CheckAccessDenyBlockedCard"/>
-    <testcase name="reasonCode present" time="0.007" classname="03CheckAccessDenyBlockedCard"/>
+  <testsuite name="03 - Check Access (DENY - blocked card)" id="c28d7074-d21b-49b9-a660-eaf7f44e39fc" timestamp="2026-06-10T03:35:18.926Z" tests="4" failures="0" errors="0" time="0.009">
+    <testcase name="Status 200" time="0.009" classname="03CheckAccessDenyBlockedCard"/>
+    <testcase name="decisionType is DENY" time="0.009" classname="03CheckAccessDenyBlockedCard"/>
+    <testcase name="allow is false" time="0.009" classname="03CheckAccessDenyBlockedCard"/>
+    <testcase name="reasonCode present" time="0.009" classname="03CheckAccessDenyBlockedCard"/>
   </testsuite>
-  <testsuite name="04 - Check Access (401 No Token)" id="6c1d47a0-587e-4dc1-ae96-18e126fee6b7" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.006">
-    <testcase name="Status 401" time="0.006" classname="04CheckAccess401NoToken"/>
-    <testcase name="problem+json content-type" time="0.006" classname="04CheckAccess401NoToken"/>
+  <testsuite name="04 - Check Access (401 No Token)" id="0dfea7db-b613-48a4-9baf-f4f0ba5ba22a" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status 401" time="0.007" classname="04CheckAccess401NoToken"/>
+    <testcase name="problem+json content-type" time="0.007" classname="04CheckAccess401NoToken"/>
   </testsuite>
-  <testsuite name="05 - Check Access (422 Missing cardId)" id="0afe7658-083d-405f-803a-1277bf04883b" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.006">
-    <testcase name="Status 422" time="0.006" classname="05CheckAccess422MissingCardId"/>
-    <testcase name="problem+json content-type" time="0.006" classname="05CheckAccess422MissingCardId"/>
+  <testsuite name="05 - Check Access (422 Missing cardId)" id="db1865eb-ff45-41db-9379-f2bd0434b0c3" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 422" time="0.005" classname="05CheckAccess422MissingCardId"/>
+    <testcase name="problem+json content-type" time="0.005" classname="05CheckAccess422MissingCardId"/>
   </testsuite>
-  <testsuite name="06 - Get Decision by ID" id="e44347b7-1cf5-4346-8222-816d4adba2aa" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.006">
-    <testcase name="Status 200 or 404" time="0.006" classname="06GetDecisionById"/>
-    <testcase name="decisionId present" time="0.006" classname="06GetDecisionById"/>
+  <testsuite name="06 - Get Decision by ID" id="f24cb573-7e42-41e3-9518-cb631d2ef779" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 200 or 404" time="0.005" classname="06GetDecisionById"/>
+    <testcase name="decisionId present" time="0.005" classname="06GetDecisionById"/>
   </testsuite>
-  <testsuite name="07 - Get Decision (404 Not Found)" id="9c9f155e-1e2c-4f79-9a37-e423543aaa18" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.006">
-    <testcase name="Status 404" time="0.006" classname="07GetDecision404NotFound"/>
-    <testcase name="problem+json content-type" time="0.006" classname="07GetDecision404NotFound"/>
+  <testsuite name="07 - Get Decision (404 Not Found)" id="16f851ec-b8fa-4e4a-96d8-9a6f1a145328" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 404" time="0.004" classname="07GetDecision404NotFound"/>
+    <testcase name="problem+json content-type" time="0.004" classname="07GetDecision404NotFound"/>
   </testsuite>
-  <testsuite name="08 - Get Policy by ID" id="bfed945b-4236-44b5-9d54-698a9c143e2e" timestamp="2026-06-10T02:48:07.885Z" tests="3" failures="0" errors="0" time="0.005">
+  <testsuite name="08 - Get Policy by ID" id="a51a12e4-d806-4d17-98af-eae6b16dffaf" timestamp="2026-06-10T03:35:18.926Z" tests="3" failures="0" errors="0" time="0.005">
     <testcase name="Status 200 or 404" time="0.005" classname="08GetPolicyById"/>
     <testcase name="policyId present" time="0.005" classname="08GetPolicyById"/>
     <testcase name="role present" time="0.005" classname="08GetPolicyById"/>
   </testsuite>
-  <testsuite name="09 - Get Policy (404 Not Found)" id="70f26b16-a7fe-4e12-8248-5449c2e92720" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.009">
-    <testcase name="Status 404" time="0.009" classname="09GetPolicy404NotFound"/>
-    <testcase name="problem+json content-type" time="0.009" classname="09GetPolicy404NotFound"/>
+  <testsuite name="09 - Get Policy (404 Not Found)" id="1194330b-519f-4152-80dc-2df9be3b2237" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status 404" time="0.007" classname="09GetPolicy404NotFound"/>
+    <testcase name="problem+json content-type" time="0.007" classname="09GetPolicy404NotFound"/>
   </testsuite>
-  <testsuite name="10 - Get Recent Access Logs" id="1a7690b0-5738-4eb4-adac-31233616da2a" timestamp="2026-06-10T02:48:07.885Z" tests="3" failures="0" errors="0" time="0.007">
+  <testsuite name="10 - Get Recent Access Logs" id="7a4d74d3-6635-4723-999f-c876fc0d2a8e" timestamp="2026-06-10T03:35:18.926Z" tests="3" failures="0" errors="0" time="0.007">
     <testcase name="Status 200" time="0.007" classname="10GetRecentAccessLogs"/>
     <testcase name="response is array" time="0.007" classname="10GetRecentAccessLogs"/>
     <testcase name="log has required fields" time="0.007" classname="10GetRecentAccessLogs"/>
   </testsuite>
-  <testsuite name="11 - Get Access Log by ID" id="da9d1bd8-f161-45ab-b097-5b5a7ce9f347" timestamp="2026-06-10T02:48:07.885Z" tests="3" failures="0" errors="0" time="0.005">
-    <testcase name="Status 200 or 404" time="0.005" classname="11GetAccessLogById"/>
-    <testcase name="logId present" time="0.005" classname="11GetAccessLogById"/>
-    <testcase name="direction is IN or OUT" time="0.005" classname="11GetAccessLogById"/>
+  <testsuite name="11 - Get Access Log by ID" id="de604107-773c-4de6-804a-e99362140e06" timestamp="2026-06-10T03:35:18.926Z" tests="3" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200 or 404" time="0.006" classname="11GetAccessLogById"/>
+    <testcase name="logId present" time="0.006" classname="11GetAccessLogById"/>
+    <testcase name="direction is IN or OUT" time="0.006" classname="11GetAccessLogById"/>
   </testsuite>
-  <testsuite name="12 - Get Gate Status" id="fd041c85-a6cb-4a52-af06-5d474e48b81b" timestamp="2026-06-10T02:48:07.885Z" tests="3" failures="0" errors="0" time="0.005">
-    <testcase name="Status 200 or 404" time="0.005" classname="12GetGateStatus"/>
-    <testcase name="gateId present" time="0.005" classname="12GetGateStatus"/>
-    <testcase name="status is valid" time="0.005" classname="12GetGateStatus"/>
+  <testsuite name="12 - Get Gate Status" id="108500cf-6fb6-4a8c-aa5a-7b54cd34594c" timestamp="2026-06-10T03:35:18.926Z" tests="3" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200 or 404" time="0.006" classname="12GetGateStatus"/>
+    <testcase name="gateId present" time="0.006" classname="12GetGateStatus"/>
+    <testcase name="status is valid" time="0.006" classname="12GetGateStatus"/>
   </testsuite>
-  <testsuite name="13 - Get Gate Status (404 Not Found)" id="6cc48dbd-64a4-49e5-8445-214244fd2c9d" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.003">
-    <testcase name="Status 404" time="0.003" classname="13GetGateStatus404NotFound"/>
-    <testcase name="problem+json content-type" time="0.003" classname="13GetGateStatus404NotFound"/>
+  <testsuite name="13 - Get Gate Status (404 Not Found)" id="7e0ffbe9-8e1b-4a8c-bda6-8736b1829d3e" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status 404" time="0.006" classname="13GetGateStatus404NotFound"/>
+    <testcase name="problem+json content-type" time="0.006" classname="13GetGateStatus404NotFound"/>
   </testsuite>
-  <testsuite name="14 - Get Card Information" id="29b094e5-3c55-477b-afe0-a3083d5c1ad1" timestamp="2026-06-10T02:48:07.885Z" tests="4" failures="0" errors="0" time="0.005">
-    <testcase name="Status 200 or 404" time="0.005" classname="14GetCardInformation"/>
-    <testcase name="cardId present" time="0.005" classname="14GetCardInformation"/>
-    <testcase name="cardStatus is valid" time="0.005" classname="14GetCardInformation"/>
-    <testcase name="ownerName present" time="0.005" classname="14GetCardInformation"/>
+  <testsuite name="14 - Get Card Information" id="3eed09ed-ec04-428a-a38d-a4a12a78e8df" timestamp="2026-06-10T03:35:18.926Z" tests="4" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200 or 404" time="0.006" classname="14GetCardInformation"/>
+    <testcase name="cardId present" time="0.006" classname="14GetCardInformation"/>
+    <testcase name="cardStatus is valid" time="0.006" classname="14GetCardInformation"/>
+    <testcase name="ownerName present" time="0.006" classname="14GetCardInformation"/>
   </testsuite>
-  <testsuite name="15 - Get Card (404 Not Found)" id="6d4e7013-566d-4a5d-a4ff-2e6e2438bef6" timestamp="2026-06-10T02:48:07.885Z" tests="2" failures="0" errors="0" time="0.004">
-    <testcase name="Status 404" time="0.004" classname="15GetCard404NotFound"/>
-    <testcase name="problem+json content-type" time="0.004" classname="15GetCard404NotFound"/>
+  <testsuite name="15 - Get Card (404 Not Found)" id="76d3229d-0b40-4553-a67f-5384b2cfa7fd" timestamp="2026-06-10T03:35:18.926Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 404" time="0.005" classname="15GetCard404NotFound"/>
+    <testcase name="problem+json content-type" time="0.005" classname="15GetCard404NotFound"/>
   </testsuite>
 </testsuites>
